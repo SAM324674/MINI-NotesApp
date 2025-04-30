@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGO_URL)
 
 //cors to connect to frontend
 const corsOptions ={
-    origin:'https://mini-notes.netlify.app', 
+    origin:['https://mini-notes.netlify.app','http://localhost:5173'], 
     credentials:true,            
     optionSuccessStatus:200,
     allowedHeaders:['Authorization','Content-Type']
