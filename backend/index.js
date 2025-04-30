@@ -35,9 +35,15 @@ app.use(
 app.use('/notes',notesRoutes);
 
 
-app.get("/health" , (req ,res)=>{
-  res.status(200).json({message:"Server Running" })
-})
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(), // server uptime in seconds
+  });
+});
+
 
 //listen to port 
 app.listen(port, () => {
