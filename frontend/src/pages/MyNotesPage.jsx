@@ -11,7 +11,7 @@ const MyNotesPage = () => {
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const [IsAdding,setIsAdding]=useState(false);
     // Add note
     const handleAddNotes = async (e) => {
         e.preventDefault();
@@ -26,7 +26,7 @@ const MyNotesPage = () => {
             });
 
             const newNote = response.data.note || response.data;
-
+            fetchNotes();
             setNotes(prev => [newNote, ...prev]); // Add to top of list
             setTitle('');
             setContent('');
@@ -62,6 +62,18 @@ const MyNotesPage = () => {
         });
     };
 
+    //Delete note
+    const handleDelete=async(note)=>{
+        try{
+            const response =await axios.delete(`${baseURL}/notes/${note._id}`);
+            console.log("response:",response.data);
+            fetchNotes();
+            setNotes(prev=>prev.filter((n)=>n._id!==note._id));
+            console.log("deleted note:",note._id);
+        }catch(error){
+            console.error(`Error deleting note:${error}`);
+        }
+    };
     // Shimmer placeholder
     const shimmerCard = (
         <div className="bg-slate-700 shadow-md shadow-blue-900 w-[20rem] p-6 flex flex-col rounded-md animate-pulse">
@@ -89,9 +101,12 @@ const MyNotesPage = () => {
                 ) : (
                     notes.map((note, id) => (
                         <div className='bg-slate-700 shadow-md shadow-blue-900 w-[20rem] p-6 flex flex-col rounded-md' key={note._id || id}>
+                            <div className='flex justify-between'>
                             <h1 className='text-xl text-white font-bold'>{note.title}</h1>
+                            <button onClick={()=>handleDelete(note)}><MdDeleteOutline size={25} color='white'/></button>
+                            </div>
                             <p className='text-white'>{note.content}</p>
-                            <span className='text-white text-sm mt-2'>{formatDate(note.createdAt)}</span>
+                            <span className='text-gray-400 text-sm mt-2'>{formatDate(note.createdAt)}</span>
                         </div>
                     ))
                 )}

@@ -7,7 +7,6 @@ const app=express();
 const port=8000;
 
 const notesRoutes=require('./Routes/NotesRoutes');
-// const socketIo = require('socket.io'); // Correct import for socket.io
 
 require ('dotenv').config();
 //Middleware
@@ -49,5 +48,3 @@ app.get("/health", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on https://mini-notes.netlify.app/${port}`);
 });
-
-// app.listen(port,()=>console.log(`Server Started : http://localhost:${port}/`))
