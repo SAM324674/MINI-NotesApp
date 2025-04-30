@@ -35,6 +35,10 @@ app.use(
 app.use('/notes',notesRoutes);
 
 
+app.get("/health" , (req ,res)=>{
+  res.status(200).json({message:"Server Running" })
+})
+
 //listen to port 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
