@@ -10,7 +10,7 @@ const MyNotesPage = () => {
     const [content, setContent] = useState('');
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [isSubmitting, setIsSubmitting] = useState(false); // Button disabled state
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Add note
     const handleAddNotes = async (e) => {
@@ -18,18 +18,16 @@ const MyNotesPage = () => {
         if (!title.trim() || !content.trim()) return;
 
         setIsSubmitting(true);
+
         try {
             const response = await axios.post(`${baseURL}/notes`, {
                 title,
                 content
             });
 
-            console.log('response:', response.data);
+            const newNote = response.data.note || response.data;
 
-            // Add new note to the top of the notes list
-            setNotes(prev => [response.data.note, ...prev]);
-
-            // Clear inputs
+            setNotes(prev => [newNote, ...prev]); // Add to top of list
             setTitle('');
             setContent('');
         } catch (error) {
@@ -44,6 +42,7 @@ const MyNotesPage = () => {
         try {
             const response = await axios.get(`${baseURL}/notes`);
             setNotes(response.data.notes);
+            console.log('Fetched notes:', response.data);
         } catch (error) {
             console.error(`Error fetching notes: ${error}`);
         } finally {
@@ -54,6 +53,14 @@ const MyNotesPage = () => {
     useEffect(() => {
         fetchNotes();
     }, []);
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return isNaN(date) ? 'Invalid date' : date.toLocaleString('en-US', {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+        });
+    };
 
     // Shimmer placeholder
     const shimmerCard = (
@@ -81,10 +88,10 @@ const MyNotesPage = () => {
                     ))
                 ) : (
                     notes.map((note, id) => (
-                        <div className='bg-slate-700 shadow-md shadow-blue-900 w-[20rem] p-6 flex flex-col rounded-md' key={id}>
+                        <div className='bg-slate-700 shadow-md shadow-blue-900 w-[20rem] p-6 flex flex-col rounded-md' key={note._id || id}>
                             <h1 className='text-xl text-white font-bold'>{note.title}</h1>
                             <p className='text-white'>{note.content}</p>
-                            <span className='text-white text-sm mt-2'>{new Date(note.createdAt).toLocaleString()}</span>
+                            <span className='text-white text-sm mt-2'>{formatDate(note.createdAt)}</span>
                         </div>
                     ))
                 )}

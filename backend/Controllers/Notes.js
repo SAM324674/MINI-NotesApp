@@ -15,8 +15,8 @@ const AddNewNote=async (req,res)=>{
         });
         console.log("new user created:",newNotes); 
         return res.json({
-            message:"new note successfully created",
-            
+            message: "new note successfully created",
+            note: newNotes, 
         });
     }catch(err){
         console.error("error occured",err);
