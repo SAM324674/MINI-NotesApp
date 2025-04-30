@@ -86,7 +86,7 @@ const MyNotesPage = () => {
     );
 
     return (
-        <div className='flex border justify-center w-full h-[100vh] flex-col items-center p-10'>
+        <div className='flex  justify-center w-full h-[100vh] flex-col items-center p-10'>
             
             <div className='flex w-full justify-center'>
             <h1 className='text-3xl font-bold text-white  '>My Notes</h1>
