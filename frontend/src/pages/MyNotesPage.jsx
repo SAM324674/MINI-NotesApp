@@ -31,6 +31,7 @@ const MyNotesPage = () => {
             setNotes(prev => [newNote, ...prev]); // Add to top of list
             setTitle('');
             setContent('');
+            setLoading(true);
             setIsAdding(false);
         } catch (error) {
             console.error(`Error adding notes: ${error}`);
@@ -70,6 +71,7 @@ const MyNotesPage = () => {
             const response =await axios.delete(`${baseURL}/notes/${note._id}`);
             console.log("response:",response.data);
             fetchNotes();
+            setLoading(true);
             setNotes(prev=>prev.filter((n)=>n._id!==note._id));
             console.log("deleted note:",note._id);
         }catch(error){
@@ -78,7 +80,7 @@ const MyNotesPage = () => {
     };
     // Shimmer placeholder
     const shimmerCard = (
-        <div className="bg-slate-700 shadow-md shadow-blue-900 w-[20rem] p-6 flex flex-col rounded-md animate-pulse">
+        <div className="bg-slate-700 shadow-md shadow-blue-900 w-[20rem] mt-14 h-[20rem] p-6 flex flex-col rounded-md animate-pulse">
             <div className="h-6 bg-gray-500 rounded w-[60%] mb-4"></div>
             <div className="h-4 bg-gray-500 rounded mb-2"></div>
             <div className="h-4 bg-gray-500 rounded w-[80%]"></div>
@@ -86,17 +88,18 @@ const MyNotesPage = () => {
     );
 
     return (
-        <div className='flex  justify-center w-full h-[100vh] flex-col items-center p-10'>
+        <div className='flex  justify-center w-full min-h-screen flex-col items-center md:p-10'>
             
-            <div className='flex w-full justify-center'>
-            <h1 className='text-3xl font-bold text-white  '>My Notes</h1>
-            <button className='w-16 h-16 rounded-md absolute top-[2rem] right-[20rem] bg-blue-500 flex justify-center items-center 'onClick={()=>setIsAdding(!IsAdding)}>
-                <IoAdd size={30}/>
-            </button>
+            <div className='flex w-full justify-center '>
+                <h1 className='text-3xl font-bold text-white absolute top-[2rem] md:top-[3rem] '>My Notes</h1>
+                {notes.length>0 &&             
+                <button className='md:w-16 md:h-16 w-10 h-10 rounded-md absolute md:top-[2rem] top-[2rem] md:right-[20rem] right-[1rem] bg-blue-500 flex justify-center items-center 'onClick={()=>setIsAdding(!IsAdding)}>
+                    <IoAdd size={30}/>
+                </button>}
             </div>
-            {notes.length===0 && 
-                        (<button onClick={()=>setIsAdding(!IsAdding)} className='border border-blue-300 rounded-lg w-[60rem] h-[30rem] mt-[5rem]'>
-                        <div className='m-10 border-blue-300 border-2 rounded-lg h-[20rem] flex flex-col justify-center items-center gap-[5rem]'>
+            {!loading && notes.length===0 && 
+                        (<button onClick={()=>setIsAdding(!IsAdding)} className='border border-blue-300 rounded-lg md:w-[60rem] h-[30rem] mt-[5rem] w-[20rem]'>
+                        <div className='md:m-10 m-2 border-blue-300 border-2 rounded-lg h-[20rem] flex flex-col justify-center items-center gap-[5rem]'>
                             <h1 className='text-4xl text-white font-bold'>Add your First Note</h1>
                            <div className='p-4 w-[5rem] h-[5rem] flex justify-center rounded-md shadow-md shadow-blue-300'> <IoMdAddCircleOutline size={40} color='#93c5fd'/></div>
                         </div>
@@ -114,19 +117,19 @@ const MyNotesPage = () => {
                 IsAdding={IsAdding}
             />
             )}
-            <div className='w-full h-full flex flex-wrap gap-10 justify-start p-5 '>
+            <div className='w-full h-full flex flex-wrap gap-10 md:justify-start justify-center items-center mt-[5rem] md:mt-8 p-5 md:flex-row flex-col'>
                 {loading ? (
                     Array.from({ length: 3 }).map((_, index) => (
                         <div key={index}>{shimmerCard}</div>
                     ))
                 ) : (
                     notes.map((note, id) => (
-                        <div className='border-blue-300 border mt-[4rem] shadow-md shadow-slate-800 w-[20rem] h-[20rem]  p-6 flex flex-col justify-center items-start gap-[2rem] rounded-md' key={note._id || id}>
+                        <div className='border-blue-300 border md:mt-[4rem] shadow-md shadow-slate-800 md:w-[20rem] md:h-[20rem]  p-7 md:p-6 flex-col justify-center items-center rounded-md ' key={note._id || id}>
                             <div className='flex justify-between w-full'>
                                 <h1 className='text-xl text-white font-bold'>{note.title}</h1>
                                 <button onClick={()=>handleDelete(note)}><MdDeleteOutline size={25} color='white'/></button>
                             </div>
-                            <p className='text-white break-words whitespace-pre-wrap overflow-y-scroll scrollbar overflow-x-hidden w-[18rem] h-[10rem] '>{note.content}</p>
+                            <p className='text-white break-words whitespace-pre-wrap overflow-y-scroll scrollbar overflow-x-hidden w-[18rem] h-[10rem] md:mt-[3rem] mt-[2rem] '>{note.content}</p>
                             <span className='text-gray-400 text-sm mt-2'>{formatDate(note.createdAt)}</span>
                         </div>
                     ))
