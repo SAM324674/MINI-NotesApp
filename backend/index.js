@@ -11,7 +11,7 @@ const notesRoutes=require('./Routes/NotesRoutes');
 
 require ('dotenv').config();
 //Middleware
-app.use(cors());
+// app.use(cors());
 app.use(bodyParser.json());
 
 //connect to mongoose
@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGO_URL)
 
 //cors to connect to frontend
 const corsOptions ={
-    origin:'https://mini-notes.netlify.app/', 
+    origin:'https://mini-notes.netlify.app', 
     credentials:true,            
     optionSuccessStatus:200,
     allowedHeaders:['Authorization','Content-Type']
@@ -47,7 +47,7 @@ app.get("/health", (req, res) => {
 
 //listen to port 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on https://mini-notes.netlify.app/${port}`);
 });
 
 // app.listen(port,()=>console.log(`Server Started : http://localhost:${port}/`))
