@@ -18,7 +18,7 @@ export default {
 		function ({ addUtilities }) {
 			addUtilities({
 				".scrollbar::-webkit-scrollbar": {
-					width: "1px", // Custom scrollbar width
+					width: "0px", // Custom scrollbar width
 				},
 				".scrollbar::-webkit-scrollbar-thumb": {
 					backgroundColor: "var(--gray-500)", // Customize thumb

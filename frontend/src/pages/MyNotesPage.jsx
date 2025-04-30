@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NotesForm from '../components/NotesForm';
 import { MdDeleteOutline } from "react-icons/md";
-
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { IoAdd } from "react-icons/io5";
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 const MyNotesPage = () => {
@@ -30,6 +31,7 @@ const MyNotesPage = () => {
             setNotes(prev => [newNote, ...prev]); // Add to top of list
             setTitle('');
             setContent('');
+            setIsAdding(false);
         } catch (error) {
             console.error(`Error adding notes: ${error}`);
         } finally {
@@ -84,28 +86,47 @@ const MyNotesPage = () => {
     );
 
     return (
-        <div className='flex border justify-center w-full h-auto flex-col items-center'>
-            <NotesForm
+        <div className='flex border justify-center w-full h-[100vh] flex-col items-center p-10'>
+            
+            <div className='flex w-full justify-center'>
+            <h1 className='text-3xl font-bold text-white  '>My Notes</h1>
+            <button className='w-16 h-16 rounded-md absolute top-[2rem] right-[20rem] bg-blue-500 flex justify-center items-center 'onClick={()=>setIsAdding(!IsAdding)}>
+                <IoAdd size={30}/>
+            </button>
+            </div>
+            {notes.length===0 && 
+                        (<button onClick={()=>setIsAdding(!IsAdding)} className='border border-blue-300 rounded-lg w-[60rem] h-[30rem] mt-[5rem]'>
+                        <div className='m-10 border-blue-300 border-2 rounded-lg h-[20rem] flex flex-col justify-center items-center gap-[5rem]'>
+                            <h1 className='text-4xl text-white font-bold'>Add your First Note</h1>
+                           <div className='p-4 w-[5rem] h-[5rem] flex justify-center rounded-md shadow-md shadow-blue-300'> <IoMdAddCircleOutline size={40} color='#93c5fd'/></div>
+                        </div>
+                    </button>)
+            }
+            {IsAdding && (
+                <NotesForm
                 title={title}
                 content={content}
                 setTitle={setTitle}
                 setContent={setContent}
                 handleAddNotes={handleAddNotes}
                 isSubmitting={isSubmitting}
+                setIsAdding={setIsAdding}
+                IsAdding={IsAdding}
             />
-            <div className='w-full h-full flex flex-wrap gap-4 justify-evenly p-5'>
+            )}
+            <div className='w-full h-full flex flex-wrap gap-10 justify-start p-5 '>
                 {loading ? (
                     Array.from({ length: 3 }).map((_, index) => (
                         <div key={index}>{shimmerCard}</div>
                     ))
                 ) : (
                     notes.map((note, id) => (
-                        <div className='bg-slate-700 shadow-md shadow-blue-900 w-[20rem] p-6 flex flex-col rounded-md' key={note._id || id}>
-                            <div className='flex justify-between'>
-                            <h1 className='text-xl text-white font-bold'>{note.title}</h1>
-                            <button onClick={()=>handleDelete(note)}><MdDeleteOutline size={25} color='white'/></button>
+                        <div className='border-blue-300 border mt-[4rem] shadow-md shadow-slate-800 w-[20rem] h-[20rem]  p-6 flex flex-col justify-center items-start gap-[2rem] rounded-md' key={note._id || id}>
+                            <div className='flex justify-between w-full'>
+                                <h1 className='text-xl text-white font-bold'>{note.title}</h1>
+                                <button onClick={()=>handleDelete(note)}><MdDeleteOutline size={25} color='white'/></button>
                             </div>
-                            <p className='text-white'>{note.content}</p>
+                            <p className='text-white break-words whitespace-pre-wrap overflow-y-scroll scrollbar overflow-x-hidden w-[18rem] h-[10rem] '>{note.content}</p>
                             <span className='text-gray-400 text-sm mt-2'>{formatDate(note.createdAt)}</span>
                         </div>
                     ))

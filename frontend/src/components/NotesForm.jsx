@@ -1,12 +1,16 @@
 import React from 'react';
+import { RxCross1 } from "react-icons/rx";
 
 const NotesForm = (props) => {
-    const { title, setTitle, content, setContent, handleAddNotes, isSubmitting } = props;
+    const { title, setTitle, content, setContent, handleAddNotes, isSubmitting , IsAdding ,setIsAdding} = props;
 
     return (
-        <div className='border border-black w-[40rem] h-[30rem] flex flex-col justify-evenly p-6'>
-            <h1 className='text-white text-4xl font-bold'>Add a New Note</h1>
-
+        <div className='flex h-[100vh] w-full justify-center items-center bg-black/30 backdrop-blur-sm absolute z-50'>
+        <div className=' w-[40rem] h-[30rem] flex flex-col justify-evenly p-6 rounded-md bg-blue-950/50 '>
+           <div className='flex justify-between items-center w-full'>
+           <h1 className='text-white text-4xl font-bold'>Add a New Note</h1>
+            <button onClick={()=>setIsAdding(false)}><RxCross1 color='white' size={20}/></button>
+           </div>
             <label htmlFor="title" className="block mb-2 text-sm font-medium text-white">Title</label>
             <input
                 type="text"
@@ -38,6 +42,7 @@ const NotesForm = (props) => {
             >
                 {isSubmitting ? 'Adding...' : 'Add Note'}
             </button>
+        </div>
         </div>
     );
 };
